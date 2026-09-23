@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.log
+
+# Large 3D Lens Models (>30MB ~ 130MB, generated on-the-fly via Python scripts)
+*lens*.obj
+*lens*.stl
+*.rar
+*.zip
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
