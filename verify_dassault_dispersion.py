@@ -17,17 +17,20 @@ import matplotlib.pyplot as plt
 
 def build_sweep_table():
     rows = []
-    # 0 -> 1: Gamma -> X (phaseY 0..180)
-    for b, py in zip([0.0, 0.2, 0.4, 0.6, 0.8, 1.0], [0, 36, 72, 108, 144, 180]):
+    # 0 -> 1: Gamma -> X (phaseY 0..180, 官方在 Gamma 点设置 phaseY=1 规避 0/0 奇异性与 DC 伪模)
+    for b, py in zip([0.0, 0.2, 0.4, 0.6, 0.8, 1.0], [1, 36, 72, 108, 144, 180]):
         rows.append((b, 0, py, 0, "Γ-X" if b in [0.0, 1.0] else ""))
     
     # 1 -> 2: X -> M (phaseX 0..180, phaseY 180)
     for b, px in zip([1.2, 1.4, 1.6, 1.8, 2.0], [36, 72, 108, 144, 180]):
         rows.append((b, px, 180, 0, "X-M" if b == 2.0 else ""))
         
-    # 2 -> 3: M -> Gamma (phaseX 144..0, phaseY 144..0)
+    # 2 -> 3: M -> Gamma (phaseX 144..0, phaseY 144..0, 官方在 Gamma 点设置 phaseX=0, phaseY=1, phaseZ=0)
     for b, p in zip([2.2, 2.4, 2.6, 2.8, 3.0], [144, 108, 72, 36, 0]):
-        rows.append((b, p, p, 0, "M-Γ" if b == 3.0 else ""))
+        if b == 3.0:
+            rows.append((b, 0, 1, 0, "M-Γ"))
+        else:
+            rows.append((b, p, p, 0, ""))
         
     # 3 -> 4: Gamma -> R (phaseX 36..180, phaseY 36..180, phaseZ 36..180)
     for b, p in zip([3.2, 3.4, 3.6, 3.8, 4.0], [36, 72, 108, 144, 180]):
