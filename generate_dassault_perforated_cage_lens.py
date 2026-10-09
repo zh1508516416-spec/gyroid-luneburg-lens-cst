@@ -29,11 +29,12 @@ if os.path.exists(font_path):
     plt.rcParams['font.sans-serif'] = ['Microsoft YaHei']
 plt.rcParams['axes.unicode_minus'] = False
 
-def generate_perforated_cage_lens(R=30.0, a=6.0, N=120, d_shell=1.2, C_cage=0.05, smooth_iters=12):
+def generate_perforated_cage_lens(R=30.0, a=6.0, N=120, d_shell=1.2, C_cage=0.05, smooth_iters=12, suffix=""):
     out_dir = os.path.dirname(os.path.abspath(__file__))
     os.makedirs(out_dir, exist_ok=True)
 
-    tag = f"R{int(R)}mm_D{int(2*R)}mm"
+    sfx = f"_{suffix.lstrip('_')}" if suffix else ""
+    tag = f"60mm{sfx}" if int(R) == 30 else f"R{int(R)}mm_D{int(2*R)}mm{sfx}"
     out_obj = os.path.join(out_dir, f"luneburg_lens_dassault_cage_{tag}.obj")
     out_stl = os.path.join(out_dir, f"luneburg_lens_dassault_cage_{tag}.stl")
     out_png = os.path.join(out_dir, f"luneburg_lens_dassault_cage_{tag}_render.png")
@@ -207,7 +208,8 @@ if __name__ == '__main__':
     parser.add_argument("--resolution", "-N", type=int, default=120, help="计算体素分辨率 N (默认 120)")
     parser.add_argument("--shell-thick", "-d", type=float, default=1.2, help="外球壳厚度 (mm)，默认 1.2 mm")
     parser.add_argument("--hole-size", "-C", type=float, default=0.05, help="外壳开孔阈值 C_cage (默认 0.05，通透大孔)")
+    parser.add_argument("--suffix", "-s", type=str, default="", help="输出文件名后缀，例如 highres")
     args = parser.parse_args()
 
     generate_perforated_cage_lens(R=args.radius, a=args.period, N=args.resolution, 
-                                  d_shell=args.shell_thick, C_cage=args.hole_size)
+                                  d_shell=args.shell_thick, C_cage=args.hole_size, suffix=args.suffix)
